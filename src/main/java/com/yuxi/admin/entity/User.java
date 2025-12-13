@@ -17,15 +17,15 @@ public class User {
     /**
      * 姓名
      */
-    private String name;
+    private String userName;
 
     /**
      * 年龄
      */
-    private Integer age;
+    private String userPassword;
 
     /**
-     * 邮箱
+     * 账号
      */
-    private String email;
+    private String userAccount;
 }

@@ -1,19 +1,23 @@
 server:
-  port: 8080
-
+    port: 8088
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/yuxi_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: root
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+    jmx:
+        enabled: false
+    mvc:
+        pathmatch:
+            matching-strategy: ant_path_matcher  # 关键：适配Swagger 2.9.2
 
+    servlet:
+        multipart:
+            # 最大上传单文件大小
+            max-file-size: 10MB
+            # 最大上传总大小
+            max-request-size: 10MB
+    datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://58.87.103.30:3306/yuxi_admin?serverTimezone=GMT%2B8
+        username: tiankai
+        password: Qq133242
 mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  global-config:
-    db-config:
-      id-type: auto
+    configuration:
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
