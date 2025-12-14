@@ -1,12 +1,15 @@
 package com.yuxi.admin.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-@TableName("user")
+@TableName("sys_user")
 public class User {
     /**
      * 主键ID
@@ -30,7 +33,8 @@ public class User {
     private String userAccount;
 
     /*
-    * 角色
+    * 角色列表
     * */
-    private String roleId;
+    @TableField(exist = false)
+    private List<Role> roleList;
 }

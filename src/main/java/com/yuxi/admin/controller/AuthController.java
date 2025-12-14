@@ -1,5 +1,9 @@
 package com.yuxi.admin.controller;
 
+import com.yuxi.admin.entity.Role;
+import com.yuxi.admin.entity.SysUserRole;
+import com.yuxi.admin.mapper.SysUserRoleMapper;
+import com.yuxi.admin.service.RoleService;
 import com.yuxi.admin.utils.JwtUtil;
 import com.yuxi.admin.entity.User;
 import com.yuxi.admin.service.UserService;
@@ -34,6 +38,9 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private SysUserRoleMapper sysUserRoleMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -78,7 +85,7 @@ public class AuthController {
             @ApiParam("用户名") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password,
             @ApiParam("姓名") @RequestParam String name,
-            @ApiParam("角色") @RequestParam String roleId
+            @ApiParam("角色") @RequestParam Long roleId
     ) {
 
         Map<String, Object> result = new HashMap<>();
@@ -97,7 +104,13 @@ public class AuthController {
         User newUser = new User();
         newUser.setUserAccount(username);
         newUser.setUserName(name);
-        newUser.setRoleId(roleId);
+
+        // 插入角色
+        SysUserRole sysUserRole = new SysUserRole();
+        sysUserRole.setUserId(newUser.getId());
+        sysUserRole.setRoleId(roleId);
+        sysUserRoleMapper.insert(sysUserRole);
+
         newUser.setUserPassword(passwordEncoder.encode(password)); // 密码加密
 
         boolean saved = userService.save(newUser);

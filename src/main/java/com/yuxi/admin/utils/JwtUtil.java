@@ -15,8 +15,9 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    // 设置密钥和过期时间
-    private SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    // 设置固定的密钥和过期时间
+    private static final String SECRET_KEY_STRING = "mySecretKeyForYuxiAdminApplication12345"; // 固定密钥字符串
+    private SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY_STRING.getBytes());
     private static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60; // 24小时
 
     // 从令牌中获取用户名
