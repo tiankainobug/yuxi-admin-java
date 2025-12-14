@@ -20,7 +20,7 @@ public class User {
     private String userName;
 
     /**
-     * 年龄
+     * 密码
      */
     private String userPassword;
 
@@ -28,4 +28,9 @@ public class User {
      * 账号
      */
     private String userAccount;
+
+    /*
+    * 角色
+    * */
+    private String roleId;
 }
