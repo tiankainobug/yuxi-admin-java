@@ -24,7 +24,7 @@ public class UserController {
      * @return 用户列表
      */
     @GetMapping("/list")
-    // @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ApiOperation("获取所有用户")
     public List<User> getUserList() {
         return userService.list();
