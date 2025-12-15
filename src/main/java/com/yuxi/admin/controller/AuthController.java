@@ -1,9 +1,8 @@
 package com.yuxi.admin.controller;
 
-import com.yuxi.admin.entity.Role;
+import com.yuxi.admin.common.Result;
 import com.yuxi.admin.entity.SysUserRole;
 import com.yuxi.admin.mapper.SysUserRoleMapper;
-import com.yuxi.admin.service.RoleService;
 import com.yuxi.admin.utils.JwtUtil;
 import com.yuxi.admin.entity.User;
 import com.yuxi.admin.service.UserService;
@@ -47,11 +46,9 @@ public class AuthController {
 
     @PostMapping("/login")
     @ApiOperation("用户登录")
-    public Map<String, Object> login(
+    public Result<String> login(
             @ApiParam("用户名") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password) {
-
-        Map<String, Object> result = new HashMap<>();
 
         try {
             // 获取明文密码
@@ -60,9 +57,7 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(username, password)
             );
         } catch (BadCredentialsException e) {
-            result.put("success", false);
-            result.put("message", "用户名或密码错误");
-            return result;
+            return Result.failed("用户名或密码错误");
         }
 
         // 加载用户详细信息
@@ -71,12 +66,7 @@ public class AuthController {
         // 生成JWT令牌
         final String token = jwtUtil.generateToken(userDetails.getUsername());
 
-        result.put("success", true);
-        result.put("message", "登录成功");
-        result.put("token", token);
-        result.put("username", username);
-
-        return result;
+        return Result.success(token, "登录成功");
     }
 
     @PostMapping("/register")
