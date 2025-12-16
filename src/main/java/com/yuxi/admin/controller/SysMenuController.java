@@ -32,7 +32,7 @@ public class SysMenuController {
      * @return 菜单列表
      */
     @GetMapping()
-    public List<SysMenu> getMenuList() {
+    public Result getMenuList() {
         // 获取所有的顶级菜单
         // 使用 LambdaQueryWrapper 替代 QueryWrapper，通过 SysMenu::getParentId 方法引用，提高类型安全性
         LambdaQueryWrapper<SysMenu> qw = new LambdaQueryWrapper<>();
@@ -44,7 +44,7 @@ public class SysMenuController {
             menu.setChildren(sysMenus);
         }
 
-        return list;
+        return Result.success(list);
     }
 
     /**
