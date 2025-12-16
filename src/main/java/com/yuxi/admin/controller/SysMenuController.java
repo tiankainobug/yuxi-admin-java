@@ -80,8 +80,8 @@ public class SysMenuController {
      * @param id 菜单id
      * @return 删除结果
      */
-    @PostMapping("/delete")
-    public Result deleteMenu(@RequestParam Long id) {
+    @PostMapping("/delete/{id}")
+    public Result deleteMenu(@PathVariable Long id) {
         // 判断是否有子菜单，有子菜单不让删除
         SysMenu byId = sysMenuService.getById(id);
         List<SysMenu> sysMenus = sysMenuService.setMenuChildrenTree(byId);
