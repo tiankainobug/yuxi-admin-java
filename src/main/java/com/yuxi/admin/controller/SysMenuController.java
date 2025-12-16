@@ -7,11 +7,7 @@ import com.yuxi.admin.common.Result;
 import com.yuxi.admin.entity.SysMenu;
 import com.yuxi.admin.service.ISysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -57,7 +53,7 @@ public class SysMenuController {
      * @return 添加结果
      */
     @PostMapping("/add")
-    public Result addMenu(SysMenu menu) {
+    public Result addMenu(@RequestBody SysMenu menu) {
         boolean result = sysMenuService.save(menu);
         if (result) {
             return Result.success("添加成功");
@@ -71,7 +67,7 @@ public class SysMenuController {
      * @return 修改结果
      */
     @PostMapping("/update")
-    public Result updateMenu(SysMenu menu) {
+    public Result updateMenu(@RequestBody SysMenu menu) {
         boolean result = sysMenuService.updateById(menu);
         if (result) {
             return Result.success("修改成功");
@@ -85,7 +81,7 @@ public class SysMenuController {
      * @return 删除结果
      */
     @PostMapping("/delete")
-    public Result deleteMenu(Long id) {
+    public Result deleteMenu(@RequestParam Long id) {
         // 判断是否有子菜单，有子菜单不让删除
         SysMenu byId = sysMenuService.getById(id);
         List<SysMenu> sysMenus = sysMenuService.setMenuChildrenTree(byId);
