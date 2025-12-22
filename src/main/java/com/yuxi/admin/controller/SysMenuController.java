@@ -32,11 +32,16 @@ public class SysMenuController {
      * @return 菜单列表
      */
     @GetMapping()
-    public Result getMenuList() {
-        // 获取所有的顶级菜单
+    public Result getMenuList(@RequestParam(value = "name", required = false) String name) {
         // 使用 LambdaQueryWrapper 替代 QueryWrapper，通过 SysMenu::getParentId 方法引用，提高类型安全性
         LambdaQueryWrapper<SysMenu> qw = new LambdaQueryWrapper<>();
-        qw.isNull(SysMenu::getParentId);
+        if (name != null && !name.isEmpty()) {
+            qw.like(SysMenu::getName, name);
+        } else {
+            // 获取所有的顶级菜单
+            qw.isNull(SysMenu::getParentId);
+        }
+
         List<SysMenu> list = sysMenuService.list(qw);
 
         for (SysMenu menu : list) {
