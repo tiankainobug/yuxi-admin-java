@@ -7,11 +7,7 @@ import com.yuxi.admin.entity.Dept;
 import com.yuxi.admin.entity.SysMenu;
 import com.yuxi.admin.service.IDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +56,24 @@ public class DeptController {
         }
 
         return Result.success(tree);
+    }
+
+    @PostMapping("/add")
+    public Result add(@RequestBody Dept dept) {
+        boolean save = deptService.save(dept);
+        return save ? Result.success() : Result.failed();
+    }
+
+    @PostMapping("/update")
+    public Result update(@RequestBody Dept dept) {
+        boolean update = deptService.updateById(dept);
+        return update ? Result.success() : Result.failed();
+    }
+
+    @PostMapping("/delete/{id}")
+    public Result delete(@PathVariable Long id) {
+        boolean delete = deptService.removeById(id);
+        return delete ? Result.success() : Result.failed();
     }
 
 }

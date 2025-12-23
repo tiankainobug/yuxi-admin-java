@@ -19,6 +19,7 @@ public class MybatisPlusHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         System.out.println("开始插入填充...");
         this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
+        this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
     }
 
     @Override
