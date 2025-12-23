@@ -7,6 +7,7 @@ import com.yuxi.admin.service.ISysMenuService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,22 +25,20 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     /**
      * 设置菜单子菜单树
      *
-     * @param menu 菜单
+     * @param menus 菜单列表 parentId 上级 id
      * @return 菜单树
      */
     @Override
-    public List<SysMenu> setMenuChildrenTree(SysMenu menu) {
+    public List<SysMenu> buildMenuTree(List<SysMenu> menus, Long parentId) {
+        ArrayList<SysMenu> tree = new ArrayList<>();
 
-        // 获取子菜单
-        List<SysMenu> list = this.list(new QueryWrapper<SysMenu>().eq("parent_id", menu.getId()));
-        // 递归设置子菜单树
-        if (list != null && list.size() > 0) {
-            for (SysMenu sysMenu : list) {
-                sysMenu.setChildren(this.setMenuChildrenTree(sysMenu));
+        for (SysMenu menu : menus) {
+            if (parentId.equals(menu.getParentId())) {
+                menu.setChildren(buildMenuTree(menus, menu.getId()));
+                tree.add(menu);
             }
-            return list;
         }
 
-        return list;
+        return tree;
     }
 }

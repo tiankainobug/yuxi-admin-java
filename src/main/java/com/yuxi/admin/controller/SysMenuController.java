@@ -9,7 +9,9 @@ import com.yuxi.admin.service.ISysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -37,19 +39,23 @@ public class SysMenuController {
         LambdaQueryWrapper<SysMenu> qw = new LambdaQueryWrapper<>();
         if (name != null && !name.isEmpty()) {
             qw.like(SysMenu::getName, name);
-        } else {
-            // 获取所有的顶级菜单
-            qw.isNull(SysMenu::getParentId);
         }
 
         List<SysMenu> list = sysMenuService.list(qw);
 
+        ArrayList<SysMenu> tree = new ArrayList<>();
+
+        // 遍历找到最顶层菜单,然后添加子菜单
         for (SysMenu menu : list) {
-            List<SysMenu> sysMenus = sysMenuService.setMenuChildrenTree(menu);
-            menu.setChildren(sysMenus);
+            Long parentId = menu.getParentId();
+            List<SysMenu> parentCollect = list.stream().filter(m -> m.getId().equals(parentId)).collect(Collectors.toList());
+            if (parentCollect.size() == 0) {
+                menu.setChildren(sysMenuService.buildMenuTree(list, menu.getId()));
+                tree.add(menu);
+            }
         }
 
-        return Result.success(list);
+        return Result.success(tree);
     }
 
     /**
@@ -89,7 +95,11 @@ public class SysMenuController {
     public Result deleteMenu(@PathVariable Long id) {
         // 判断是否有子菜单，有子菜单不让删除
         SysMenu byId = sysMenuService.getById(id);
-        List<SysMenu> sysMenus = sysMenuService.setMenuChildrenTree(byId);
+
+        LambdaQueryWrapper<SysMenu> qw = new LambdaQueryWrapper<>();
+        qw.eq(SysMenu::getParentId, id);
+        List<SysMenu> sysMenus = sysMenuService.list(qw);
+
         if (sysMenus != null && sysMenus.size() > 0) {
             return Result.failed("请先删除子菜单！");
         }
