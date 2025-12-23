@@ -29,12 +29,12 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      * @return 菜单树
      */
     @Override
-    public List<SysMenu> buildMenuTree(List<SysMenu> menus, Long parentId) {
+    public List<SysMenu> getChildByParentId(List<SysMenu> menus, Long parentId) {
         ArrayList<SysMenu> tree = new ArrayList<>();
 
         for (SysMenu menu : menus) {
             if (parentId.equals(menu.getParentId())) {
-                menu.setChildren(buildMenuTree(menus, menu.getId()));
+                menu.setChildren(getChildByParentId(menus, menu.getId()));
                 tree.add(menu);
             }
         }

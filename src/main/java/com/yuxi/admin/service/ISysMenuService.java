@@ -15,6 +15,6 @@ import java.util.List;
  */
 public interface ISysMenuService extends IService<SysMenu> {
 
-    List<SysMenu> buildMenuTree(List<SysMenu> menus, Long parentId);
+    List<SysMenu> getChildByParentId(List<SysMenu> menus, Long parentId);
 
 }

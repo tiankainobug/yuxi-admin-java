@@ -50,7 +50,7 @@ public class SysMenuController {
             Long parentId = menu.getParentId();
             List<SysMenu> parentCollect = list.stream().filter(m -> m.getId().equals(parentId)).collect(Collectors.toList());
             if (parentCollect.size() == 0) {
-                menu.setChildren(sysMenuService.buildMenuTree(list, menu.getId()));
+                menu.setChildren(sysMenuService.getChildByParentId(list, menu.getId()));
                 tree.add(menu);
             }
         }
