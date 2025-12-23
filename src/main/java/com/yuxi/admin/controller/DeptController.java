@@ -4,6 +4,7 @@ package com.yuxi.admin.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yuxi.admin.common.Result;
 import com.yuxi.admin.entity.Dept;
+import com.yuxi.admin.entity.SysMenu;
 import com.yuxi.admin.service.IDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -42,10 +45,21 @@ public class DeptController {
 
         List<Dept> list = deptService.list(qw);
 
+        ArrayList<Dept> tree = new ArrayList<>();
 
+        // 遍历找到最顶层菜单,然后添加子菜单
+        for (Dept dept1 : list) {
+            Long parentId = dept1.getParentDeptId();
+            // 该菜单的父亲菜单是否在列表中存在，不存在的话，为根节点
+            List<Dept> parentCollect = list.stream().filter(m -> m.getDeptId().equals(parentId)).collect(Collectors.toList());
+            if (parentCollect.size() == 0) {
+                // 对跟节点，添加子菜单
+                dept1.setChildren(deptService.getChildByParentId(list, dept1.getDeptId()));
+                tree.add(dept1);
+            }
+        }
 
-
-        return null;
+        return Result.success(tree);
     }
 
 }

@@ -1,10 +1,15 @@
 package com.yuxi.admin.service.impl;
 
 import com.yuxi.admin.entity.Dept;
+import com.yuxi.admin.entity.SysMenu;
 import com.yuxi.admin.mapper.DeptMapper;
 import com.yuxi.admin.service.IDeptService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +22,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements IDeptService {
 
+    @Override
+    public List<Dept> getChildByParentId(List<Dept> depts, Long parentId) {
+        ArrayList<Dept> tree = new ArrayList<>();
+
+        for (Dept dept : depts) {
+            if (parentId.equals(dept.getParentDeptId())) {
+                dept.setChildren(getChildByParentId(depts, dept.getDeptId()));
+                tree.add(dept);
+            }
+        }
+
+        return tree;
+    }
 }
