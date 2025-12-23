@@ -48,8 +48,10 @@ public class SysMenuController {
         // 遍历找到最顶层菜单,然后添加子菜单
         for (SysMenu menu : list) {
             Long parentId = menu.getParentId();
+            // 该菜单的父亲菜单是否在列表中存在，不存在的话，为根节点
             List<SysMenu> parentCollect = list.stream().filter(m -> m.getId().equals(parentId)).collect(Collectors.toList());
             if (parentCollect.size() == 0) {
+                // 对跟节点，添加子菜单
                 menu.setChildren(sysMenuService.getChildByParentId(list, menu.getId()));
                 tree.add(menu);
             }
