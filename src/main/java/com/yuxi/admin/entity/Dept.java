@@ -30,7 +30,7 @@ public class Dept implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "部门编号（主键）")
-    @TableId(value = "dept_id", type = IdType.ASSIGN_ID)
+    @TableId(value = "dept_id", type = IdType.AUTO)
     private Long deptId;
 
     @ApiModelProperty(value = "上级部门编号，0表示顶级部门")

@@ -72,6 +72,13 @@ public class DeptController {
 
     @PostMapping("/delete/{id}")
     public Result delete(@PathVariable Long id) {
+        // 查看是否有下级部门
+        LambdaQueryWrapper<Dept> qw = new LambdaQueryWrapper<>();
+        qw.eq(Dept::getParentDeptId, id);
+        if (deptService.count(qw) > 0) {
+            return Result.failed("请先删除该部门下的子部门");
+        }
+
         boolean delete = deptService.removeById(id);
         return delete ? Result.success() : Result.failed();
     }
