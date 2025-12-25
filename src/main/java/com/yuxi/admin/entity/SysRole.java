@@ -41,6 +41,9 @@ public class SysRole implements Serializable {
     @ApiModelProperty(value = "角色状态：1-启用，0-禁用")
     private Integer status;
 
+    @ApiModelProperty(value = "排序")
+    private Integer sort;
+
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 

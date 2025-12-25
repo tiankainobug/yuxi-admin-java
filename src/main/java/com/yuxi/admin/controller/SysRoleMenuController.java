@@ -24,7 +24,7 @@ import java.util.List;
  * @since 2025-12-24
  */
 @RestController
-@RequestMapping("/sys-role-menu")
+@RequestMapping("/roleMenu")
 public class SysRoleMenuController {
 
     @Autowired

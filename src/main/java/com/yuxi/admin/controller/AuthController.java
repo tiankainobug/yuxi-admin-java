@@ -46,7 +46,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @ApiOperation("用户登录")
-    public Result<String> login(
+    public Result login(
             @ApiParam("用户名") @RequestParam String username,
             @ApiParam("密码") @RequestParam String password) {
 
@@ -66,7 +66,11 @@ public class AuthController {
         // 生成JWT令牌
         final String token = jwtUtil.generateToken(userDetails.getUsername());
 
-        return Result.success(token, "登录成功");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("token", token);
+        map.put("userInfo", userDetails);
+
+        return Result.success(map, "登录成功");
     }
 
     @PostMapping("/register")

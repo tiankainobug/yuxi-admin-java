@@ -1,5 +1,6 @@
 package com.yuxi.admin.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yuxi.admin.entity.User;
 import com.yuxi.admin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
