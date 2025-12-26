@@ -1,16 +1,18 @@
 package com.yuxi.admin.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.yuxi.admin.entity.User;
+import com.yuxi.admin.common.Result;
+import com.yuxi.admin.entity.SysUser;
 import com.yuxi.admin.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -27,7 +29,7 @@ public class UserController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ApiOperation("获取所有用户")
-    public List<User> getUserList() {
+    public List<SysUser> getUserList() {
         return userService.list();
     }
 
@@ -39,7 +41,7 @@ public class UserController {
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or principal.username == #id.toString()")
     @ApiOperation("根据ID获取用户")
-    public User getUserById(@ApiParam("用户ID") @PathVariable Long id) {
+    public SysUser getUserById(@ApiParam("用户ID") @PathVariable Long id) {
         return userService.getById(id);
     }
 
@@ -51,7 +53,7 @@ public class UserController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("创建用户")
-    public boolean createUser(@ApiParam("用户信息") @RequestBody User user) {
+    public boolean createUser(@ApiParam("用户信息") @RequestBody SysUser user) {
         return userService.save(user);
     }
 
@@ -63,7 +65,7 @@ public class UserController {
     @PutMapping("/update")
     @PreAuthorize("hasRole('ADMIN') or principal.username == #user.id.toString()")
     @ApiOperation("更新用户")
-    public boolean updateUser(@ApiParam("用户信息") @RequestBody User user) {
+    public boolean updateUser(@ApiParam("用户信息") @RequestBody SysUser user) {
         return userService.updateById(user);
     }
 
@@ -77,5 +79,14 @@ public class UserController {
     @ApiOperation("删除用户")
     public boolean deleteUser(@ApiParam("用户ID") @PathVariable Long id) {
         return userService.removeById(id);
+    }
+
+    @GetMapping("/info")
+    @ApiOperation("获取用户信息")
+    public Result getUserInfo(HttpServletRequest request) {
+
+        Map<String, Object> userInfo = userService.getUserInfo(request);
+
+        return Result.success(userInfo);
     }
 }

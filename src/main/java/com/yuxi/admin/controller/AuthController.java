@@ -2,10 +2,10 @@ package com.yuxi.admin.controller;
 
 import com.yuxi.admin.common.Result;
 import com.yuxi.admin.entity.SysUserRole;
+import com.yuxi.admin.entity.SysUser;
 import com.yuxi.admin.mapper.SysUserRoleMapper;
-import com.yuxi.admin.utils.JwtUtil;
-import com.yuxi.admin.entity.User;
 import com.yuxi.admin.service.UserService;
+import com.yuxi.admin.utils.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -13,10 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +29,6 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -60,17 +58,10 @@ public class AuthController {
             return Result.failed("用户名或密码错误");
         }
 
-        // 加载用户详细信息
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
         // 生成JWT令牌
-        final String token = jwtUtil.generateToken(userDetails.getUsername());
+        final String token = jwtUtil.generateToken(username);
 
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("token", token);
-        map.put("userInfo", userDetails);
-
-        return Result.success(map, "登录成功");
+        return Result.success(token, "登录成功");
     }
 
     @PostMapping("/register")
@@ -85,7 +76,7 @@ public class AuthController {
         Map<String, Object> result = new HashMap<>();
 
         // 检查用户是否已存在
-        User existingUser = userService.getOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<User>()
+        SysUser existingUser = userService.getOne(new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<SysUser>()
                 .eq("user_account", username));
 
         if (existingUser != null) {
@@ -95,7 +86,7 @@ public class AuthController {
         }
 
         // 创建新用户
-        User newUser = new User();
+        SysUser newUser = new SysUser();
         newUser.setUserAccount(username);
         newUser.setUserName(name);
 

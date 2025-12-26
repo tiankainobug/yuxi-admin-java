@@ -1,10 +1,10 @@
 package com.yuxi.admin.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.yuxi.admin.entity.User;
+import com.yuxi.admin.entity.SysUser;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface UserMapper extends BaseMapper<User> {
+public interface UserMapper extends BaseMapper<SysUser> {
 
 }
