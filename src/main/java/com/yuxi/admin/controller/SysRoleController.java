@@ -3,10 +3,21 @@ package com.yuxi.admin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yuxi.admin.common.Result;
+import com.yuxi.admin.entity.SysMenu;
 import com.yuxi.admin.entity.SysRole;
+import com.yuxi.admin.entity.SysRoleMenu;
+import com.yuxi.admin.entity.SysUser;
+import com.yuxi.admin.mapper.SysMenuMapper;
+import com.yuxi.admin.service.ISysRoleMenuService;
 import com.yuxi.admin.service.ISysRoleService;
+import com.yuxi.admin.service.UserService;
+import com.yuxi.admin.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -22,6 +33,9 @@ public class SysRoleController {
 
     @Autowired
     private ISysRoleService sysRoleService;
+
+    @Autowired
+    private ISysRoleMenuService sysRoleMenuService;
 
     @PostMapping("/list")
     public Result list(@RequestBody SysRole sysRole) {
@@ -67,6 +81,15 @@ public class SysRoleController {
     public Result delete(@PathVariable Long id) {
         boolean delete = sysRoleService.removeById(id);
         return delete ? Result.success() : Result.failed();
+    }
+
+    @PostMapping("/getMenuIds")
+    public Result getMenuIds(@RequestBody SysRole sysRole, HttpServletRequest request) {
+        // 根据角色 id，获取对应的菜单 ids
+        Long roleId = sysRole.getId();
+        // 查找该角色对应的菜单 ids
+        List<SysRoleMenu> list = sysRoleMenuService.list(new LambdaQueryWrapper<SysRoleMenu>().eq(SysRoleMenu::getRoleId, roleId));
+        return Result.success(list.stream().map(SysRoleMenu::getMenuId).collect(Collectors.toList()));
     }
 
 

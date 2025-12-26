@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,17 @@ public class JwtUtil {
     private static final String SECRET_KEY_STRING = "mySecretKeyForYuxiAdminApplication12345"; // 固定密钥字符串
     private SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY_STRING.getBytes());
     private static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60; // 24小时
+
+
+    // 从请求中获取用户名
+    public String getUsernameFromRequest(HttpServletRequest request) {
+        String authorization = request.getHeader("Authorization");
+        if (authorization != null && authorization.startsWith("Bearer ")) {
+            String token = authorization.substring(7);
+            return getUsernameFromToken(token);
+        }
+        return null;
+    }
 
     // 从令牌中获取用户名
     public String getUsernameFromToken(String token) {
