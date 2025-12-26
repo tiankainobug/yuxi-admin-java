@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -39,6 +40,24 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             }
         }
 
+        return tree;
+    }
+
+    @Override
+    public List<SysMenu> buildMenuTree(List<SysMenu> menus) {
+        ArrayList<SysMenu> tree = new ArrayList<>();
+
+        // 遍历找到最顶层菜单,然后添加子菜单
+        for (SysMenu menu : menus) {
+            Long parentId = menu.getParentId();
+            // 该菜单的父亲菜单是否在列表中存在，不存在的话，为根节点
+            List<SysMenu> parentCollect = menus.stream().filter(m -> m.getId().equals(parentId)).collect(Collectors.toList());
+            if (parentCollect.size() == 0) {
+                // 对跟节点，添加子菜单
+                menu.setChildren(this.getChildByParentId(menus, menu.getId()));
+                tree.add(menu);
+            }
+        }
         return tree;
     }
 }

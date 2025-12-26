@@ -17,4 +17,6 @@ public interface ISysMenuService extends IService<SysMenu> {
 
     List<SysMenu> getChildByParentId(List<SysMenu> menus, Long parentId);
 
+    List<SysMenu> buildMenuTree(List<SysMenu> menus);
+
 }

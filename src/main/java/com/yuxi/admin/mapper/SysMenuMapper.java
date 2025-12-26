@@ -3,6 +3,8 @@ package com.yuxi.admin.mapper;
 import com.yuxi.admin.entity.SysMenu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * <p>
  * 菜单表 Mapper 接口
@@ -12,5 +14,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2025-12-16
  */
 public interface SysMenuMapper extends BaseMapper<SysMenu> {
-
+    List<SysMenu> selectMenusByUserId(Long userId);
 }
