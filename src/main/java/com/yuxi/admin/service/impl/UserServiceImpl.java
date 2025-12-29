@@ -61,4 +61,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
             return Collections.emptyMap();
         }
     }
+
+    /**
+     * 根据请求头获取用户列表
+     * 如果用户信息携带了部门 id，则返回部门下的用户列表
+     * @param sysUser： 用户信息
+     * @param request： 请求对象
+     * @return
+     */
+    @Override
+    public List<SysUser> getUserListByRequest(SysUser sysUser, HttpServletRequest request) {
+        Long deptId;
+        deptId = sysUser.getDeptId();
+
+        if (deptId == null) {
+            // 没传部门 id，则返回该用户的部门 id
+            String username = jwtUtil.getUsernameFromRequest(request);
+            SysUser user = userMapper.selectOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUserAccount, username));
+            deptId = user.getDeptId();
+        }
+
+        // 根据部门 id，获取部门下的人员列表
+        return userMapper.selectList(new LambdaQueryWrapper<SysUser>().eq(SysUser::getDeptId, deptId));
+    }
 }

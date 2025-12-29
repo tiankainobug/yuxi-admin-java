@@ -26,11 +26,10 @@ public class UserController {
      * 获取所有用户
      * @return 用户列表
      */
-    @GetMapping("/list")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/list")
     @ApiOperation("获取所有用户")
-    public List<SysUser> getUserList() {
-        return userService.list();
+    public Result<List<SysUser>> getUserList(@RequestBody SysUser user, HttpServletRequest request) {
+        return Result.success(userService.getUserListByRequest(user, request));
     }
 
     /**
